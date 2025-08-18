@@ -10,7 +10,7 @@ export async function matchLogos(
   logos: IconName[]
 ): Promise<IContentMatchedIconLs[]> {
   try {
-    const response = await fetch("http://localhost:5002/match-logos", {
+    const response = await fetch("https://spendfloblogassetsbackend-be2dd5352611.herokuapp.com/match-logos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sentences, logos }),
