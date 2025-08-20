@@ -24,22 +24,22 @@ import theme from "./theme";
 import ExcelUploadTextField from "./components/ExcelUpload";
 import { Loader } from "./components/Loader";
 
-type Article = {
+export type IArticle = {
   title: string;
   content: string[];
 };
 
 function App() {
-  const [excelData, setExcelData] = useState<Article[]>([]);
-  const [data, setData] = useState<Article>({
+  const [excelData, setExcelData] = useState<IArticle[]>([]);
+  const [data, setData] = useState<IArticle>({
     title: "",
     content: [],
   });
 
   const [selectedRow, setSelectedRow] = useState(0);
 
-  const title = data.title;
-  const content = data.content;
+  const title = data.title ?? "";
+  const content = data.content ?? [];
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentDetails, setContentDetails] = useState<IContentDetails[]>([]);

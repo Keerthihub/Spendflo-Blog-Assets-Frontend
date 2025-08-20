@@ -4,9 +4,10 @@ import { styled } from "@mui/material/styles";
 
 import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { IArticle } from "../../App";
 
 interface ExcelUploadProps {
-  onData: (data: any[]) => void;
+  onData: (data: IArticle[]) => void;
 }
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
