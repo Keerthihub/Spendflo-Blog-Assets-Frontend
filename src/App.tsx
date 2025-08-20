@@ -8,6 +8,7 @@ import {
   CssBaseline,
   TextField,
   ThemeProvider,
+  Typography,
 } from "@mui/material";
 import { getRandomColor } from "./utils/genral";
 import { IContentMatchedIconLs, matchLogos } from "./api/matchLogos";
@@ -21,6 +22,7 @@ import Template2 from "./components/Template2/Template2";
 import Template5 from "./components/Template5/Template5";
 import theme from "./theme";
 import ExcelUploadTextField from "./components/ExcelUpload";
+import { Loader } from "./components/Loader";
 
 type Article = {
   title: string;
@@ -39,6 +41,7 @@ function App() {
   const title = data.title;
   const content = data.content;
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentDetails, setContentDetails] = useState<IContentDetails[]>([]);
 
   const [completeContentDetails, setCompleteContentDetails] = useState<
@@ -106,17 +109,22 @@ function App() {
     if (content.length === 0) return;
 
     const fetchLogos = async () => {
+      setIsLoading(true);
       const contentWithIcon = await matchLogos(content, phosphorIcons);
       const _completeContentDetails: ICompleteContentDetails[] =
         contentWithIcon.map((item) => ({
           sentence: item.sentence,
           color: getRandomColor(),
           iconPos: 0,
-          iconLs: item.icon,
+          iconLs: item.icon_ls,
         }));
+
       setCompleteContentDetails(_completeContentDetails);
+
+      setIsLoading(false);
     };
 
+    setContentDetails([]);
     fetchLogos();
   }, [content]);
 
@@ -141,9 +149,16 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box className="App">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "start",
+          gap: 2,
+          p: 2,
+        }}
+      >
         <CssBaseline />
-        {selectedTemplate.toString()}
         <ExcelUploadTextField
           onData={(_data) => {
             setExcelData(_data);
@@ -152,7 +167,7 @@ function App() {
         />
         {excelData.length !== 0 && (
           <>
-            <Box sx={{ p: 2 }}>
+            <Box>
               <TextField
                 label="Selected Row"
                 variant="outlined"
@@ -162,7 +177,7 @@ function App() {
                 onChange={(e) => setSelectedRow(Number(e.target.value))}
               />
             </Box>
-            <Box sx={{ display: "flex", gap: 2, p: 2 }}>
+            <Box sx={{ display: "flex", gap: 2 }}>
               <ButtonGroup variant="outlined">
                 <Button onClick={onTemplateSelect.bind(null, 1)}>
                   Template 1
@@ -185,7 +200,16 @@ function App() {
               </Button>
             </Box>
 
-            {selectedTemplate === 1 && (
+            <Typography variant="h6" sx={{ px: 2 }}>
+              Template : {selectedTemplate.toString()}
+            </Typography>
+            {isLoading && (
+              <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+                <Loader />
+              </Box>
+            )}
+
+            {!isLoading && selectedTemplate === 1 && (
               <Template1
                 title={title}
                 contentDetailsLs={contentDetails}
@@ -193,7 +217,7 @@ function App() {
                 nextIcon={nextIcon}
               />
             )}
-            {selectedTemplate === 2 && (
+            {!isLoading && selectedTemplate === 2 && (
               <Template2
                 title={title}
                 contentDetailsLs={contentDetails}
@@ -201,7 +225,7 @@ function App() {
                 nextIcon={nextIcon}
               />
             )}
-            {selectedTemplate === 3 && (
+            {!isLoading && selectedTemplate === 3 && (
               <Template3
                 title={title}
                 contentDetailsLs={contentDetails}
@@ -209,7 +233,7 @@ function App() {
                 nextIcon={nextIcon}
               />
             )}
-            {selectedTemplate === 4 && (
+            {!isLoading && selectedTemplate === 4 && (
               <Template4
                 title={title}
                 contentDetailsLs={contentDetails}
@@ -217,7 +241,7 @@ function App() {
                 nextIcon={nextIcon}
               />
             )}
-            {selectedTemplate === 5 && (
+            {!isLoading && selectedTemplate === 5 && (
               <Template5
                 title={title}
                 contentDetailsLs={contentDetails}
